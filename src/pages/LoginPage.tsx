@@ -14,8 +14,15 @@ export function LoginPage() {
     setLoading(true)
     try {
       await login(passcode)
-    } catch {
-      setError('Incorrect passcode')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Incorrect passcode'
+      setError(
+        message.toLowerCase().includes('invalid login credentials')
+          ? 'Passcode not recognized. If using Supabase, create user trip@spain.local with this password.'
+          : message === 'Incorrect passcode'
+            ? 'Incorrect passcode'
+            : message,
+      )
     } finally {
       setLoading(false)
     }

@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from './context/AuthProvider'
 import { useAuth } from './hooks/useAuth'
 import { AppShell } from './components/layout/AppShell'
 import { LoginPage } from './pages/LoginPage'
@@ -41,8 +42,10 @@ function ProtectedRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ProtectedRoutes />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <ProtectedRoutes />
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
