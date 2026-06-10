@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import type { TripUserId } from '../types'
+import { TRIP_USERS } from '../lib/constants'
 import { useAuth } from '../hooks/useAuth'
+import { UserAvatar } from '../components/ui/UserAvatar'
 
 export function LoginPage() {
   const { login } = useAuth()
-  const [passcode, setPasscode] = useState('')
+  const [selectedUser, setSelectedUser] = useState<TripUserId>('joao')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -13,15 +17,13 @@ export function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      await login(passcode)
+      await login(selectedUser, password)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Incorrect passcode'
+      const message = err instanceof Error ? err.message : 'Could not sign in'
       setError(
         message.toLowerCase().includes('invalid login credentials')
-          ? 'Passcode not recognized. If using Supabase, create user trip@spain.local with this password.'
-          : message === 'Incorrect passcode'
-            ? 'Incorrect passcode'
-            : message,
+          ? 'Wrong password for this account.'
+          : message,
       )
     } finally {
       setLoading(false)
@@ -41,28 +43,45 @@ export function LoginPage() {
     >
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <p className="small-caps" style={{ marginBottom: '0.5rem' }}>
-          Jovi & Paula
+          João & Paula
         </p>
         <h1 className="page-title" style={{ fontSize: '2.25rem', marginBottom: '0.5rem' }}>
           Spain Trip
         </h1>
-        <p className="page-subtitle" style={{ marginBottom: '2.5rem' }}>
-          Enter your shared passcode to continue
+        <p className="page-subtitle" style={{ marginBottom: '2rem' }}>
+          Sign in as yourself
         </p>
+
+        <div className="login-user-picker" style={{ marginBottom: '1.5rem' }}>
+          {(['joao', 'paula'] as TripUserId[]).map((id) => {
+            const user = TRIP_USERS[id]
+            const selected = selectedUser === id
+            return (
+              <button
+                key={id}
+                type="button"
+                className={`login-user-card ${selected ? 'selected' : ''}`}
+                onClick={() => setSelectedUser(id)}
+              >
+                <UserAvatar userId={id} size={56} />
+                <span className="login-user-name">{user.name}</span>
+              </button>
+            )
+          })}
+        </div>
 
         <form onSubmit={(e) => void handleSubmit(e)}>
           <div className="form-group">
-            <label className="form-label" htmlFor="passcode">
-              Passcode
+            <label className="form-label" htmlFor="password">
+              Password for {TRIP_USERS[selectedUser].name}
             </label>
             <input
-              id="passcode"
+              id="password"
               className="form-input"
               type="password"
-              inputMode="numeric"
               autoComplete="current-password"
-              value={passcode}
-              onChange={(e) => setPasscode(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••"
               required
             />
@@ -71,7 +90,7 @@ export function LoginPage() {
             <p style={{ color: '#b45309', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>
           )}
           <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
-            {loading ? 'Opening…' : 'Enter'}
+            {loading ? 'Signing in…' : `Continue as ${TRIP_USERS[selectedUser].name}`}
           </button>
         </form>
       </motion.div>

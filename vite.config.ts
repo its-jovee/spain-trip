@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: 'Spain Trip',
         short_name: 'Spain',
-        description: 'Trip organizer for Jovi & Paula',
+        description: 'Trip organizer for João & Paula',
         theme_color: '#FAF8F5',
         background_color: '#FAF8F5',
         display: 'standalone',

@@ -101,8 +101,8 @@ export function participantColor(participant: Participant): string {
   switch (participant) {
     case 'paula':
       return 'var(--color-paula)'
-    case 'jovi':
-      return 'var(--color-jovi)'
+    case 'joao':
+      return 'var(--color-joao)'
     default:
       return 'var(--color-both)'
   }

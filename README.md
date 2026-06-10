@@ -1,13 +1,13 @@
 # Spain Trip PWA
 
-A premium, lightweight trip organizer for Jovi & Paula — itinerary, calendar, documents, and shared checklists. Installable as a PWA on iOS and Android.
+A premium, lightweight trip organizer for João & Paula — itinerary, calendar, documents, and shared checklists. Installable as a PWA on iOS and Android.
 
 ## Features
 
 - **Today** — countdown and up-next view
 - **Itinerary** — day-by-day timeline with progressive disclosure
 - **Calendar** — month and week views, drag-to-reorder in week view
-- **Add & move plans** — with participant tags (Both / Paula / Jovi)
+- **Add & move plans** — with participant tags (João & Paula / individual)
 - **Documents** — PDF vault (Supabase Storage)
 - **Checklists** — luggage, pre-boarding, before-leaving-home (live sync)
 - **Calendar feed** — subscribe via `.ics` URL in Google/Apple Calendar
@@ -20,14 +20,19 @@ npm install
 npm run dev
 ```
 
-Default passcode (local mode): `spain2026` — set `VITE_APP_PASSCODE` to change.
+**Sign in:** pick João or Paula, each with their own Supabase account.
+
+Local mode (no Supabase): shared password `spain2026` — set `VITE_APP_PASSCODE` to change.
+
+Profile photos: add `public/avatars/joao.jpg` and `public/avatars/paula.jpg`.
 
 ## Supabase setup
 
 1. Create a free [Supabase](https://supabase.com) project
 2. Run [`supabase/schema.sql`](supabase/schema.sql) in the SQL Editor
-3. Create auth user: `trip@spain.local` with your shared passcode
-4. Copy `.env.example` → `.env` and fill in URL + anon key
+3. Create two auth users (João + Paula) with emails matching `VITE_JOAO_EMAIL` / `VITE_PAULA_EMAIL`
+4. If upgrading an existing DB, run [`supabase/migrations/002_joao_users.sql`](supabase/migrations/002_joao_users.sql)
+5. Copy `.env.example` → `.env` and fill in URL, anon key, and user emails
 
 ## PDF ingestion
 

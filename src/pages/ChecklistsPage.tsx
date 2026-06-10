@@ -1,31 +1,23 @@
 import { motion } from 'framer-motion'
+import { useAuth } from '../hooks/useAuth'
 import { useTripStore } from '../hooks/useTripStore'
-import { useIdentity } from '../hooks/useIdentity'
+import { UserAvatar } from '../components/ui/UserAvatar'
 
 export function ChecklistsPage() {
+  const { user } = useAuth()
   const { checklists, toggleChecklistItem } = useTripStore()
-  const { identity, setIdentity } = useIdentity()
+
+  if (!user) return null
 
   return (
     <div className="page">
       <header className="page-header">
         <p className="small-caps">Checklists</p>
         <h1 className="page-title">Ready to go</h1>
-        <p className="page-subtitle">Shared lists — checked items sync between phones</p>
+        <p className="page-subtitle">
+          Checking off as <strong>{user.name}</strong> — syncs between phones
+        </p>
       </header>
-
-      <div className="participant-picker" style={{ marginBottom: '1.5rem' }}>
-        {(['jovi', 'paula'] as const).map((who) => (
-          <button
-            key={who}
-            type="button"
-            className={`participant-option ${identity === who ? 'selected' : ''}`}
-            onClick={() => setIdentity(who)}
-          >
-            Checking as {who === 'jovi' ? 'Jovi' : 'Paula'}
-          </button>
-        ))}
-      </div>
 
       {checklists.map((checklist, ci) => {
         const done = checklist.items.filter((i) => i.checked).length
@@ -67,7 +59,7 @@ export function ChecklistsPage() {
                   <motion.input
                     type="checkbox"
                     checked={item.checked}
-                    onChange={() => void toggleChecklistItem(checklist.id, item.id, identity)}
+                    onChange={() => void toggleChecklistItem(checklist.id, item.id, user.id)}
                     whileTap={{ scale: 0.9 }}
                     style={{ marginTop: '0.2rem', width: '1.1rem', height: '1.1rem', accentColor: 'var(--color-ink)' }}
                   />
@@ -82,7 +74,7 @@ export function ChecklistsPage() {
                     {item.text}
                   </span>
                   {item.checked && item.checkedBy && (
-                    <span className="small-caps">{item.checkedBy}</span>
+                    <UserAvatar userId={item.checkedBy} size={22} />
                   )}
                 </label>
               ))}

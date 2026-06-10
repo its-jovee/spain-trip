@@ -159,14 +159,14 @@ export function AddPlanSheet({ open, onClose, onSave, defaultDate }: Props) {
         <div className="form-group">
           <label className="form-label">Who</label>
           <div className="participant-picker">
-            {(['both', 'paula', 'jovi'] as Participant[]).map((p) => (
+            {(['both', 'joao', 'paula'] as Participant[]).map((p) => (
               <button
                 key={p}
                 type="button"
                 className={`participant-option ${participants === p ? 'selected' : ''}`}
                 onClick={() => setParticipants(p)}
               >
-                {p === 'both' ? 'Both' : p === 'paula' ? 'Paula' : 'Jovi'}
+                {p === 'both' ? 'João & Paula' : p === 'paula' ? 'Paula' : 'João'}
               </button>
             ))}
           </div>

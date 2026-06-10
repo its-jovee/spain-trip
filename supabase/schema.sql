@@ -4,7 +4,7 @@
 create extension if not exists "uuid-ossp";
 
 create type event_type as enum ('flight', 'hotel', 'train', 'restaurant', 'activity');
-create type participant as enum ('both', 'paula', 'jovi');
+create type participant as enum ('both', 'paula', 'joao');
 
 create table if not exists events (
   id uuid primary key default uuid_generate_v4(),
@@ -45,7 +45,7 @@ create table if not exists checklist_items (
   checklist_id uuid not null references checklists(id) on delete cascade,
   text text not null,
   checked boolean not null default false,
-  checked_by text check (checked_by in ('jovi', 'paula')),
+  checked_by text check (checked_by in ('joao', 'paula')),
   sort_order int not null default 0,
   created_at timestamptz not null default now()
 );
@@ -93,6 +93,6 @@ create policy "Authenticated users can upload documents bucket"
 alter publication supabase_realtime add table events;
 alter publication supabase_realtime add table checklist_items;
 
--- Shared auth user (create via Supabase Dashboard or Admin API):
--- Email: trip@spain.local
--- Password: <your shared passcode>
+-- Create two auth users in Supabase Dashboard (Authentication → Users):
+--   João — email matching VITE_JOAO_EMAIL
+--   Paula — email matching VITE_PAULA_EMAIL

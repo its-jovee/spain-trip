@@ -1,6 +1,14 @@
 export type EventType = 'flight' | 'hotel' | 'train' | 'restaurant' | 'activity'
-export type Participant = 'both' | 'paula' | 'jovi'
+export type Participant = 'both' | 'paula' | 'joao'
 export type ParticipantFilter = 'all' | Participant
+export type TripUserId = 'joao' | 'paula'
+
+export interface TripUser {
+  id: TripUserId
+  name: string
+  email: string
+  avatarUrl: string
+}
 
 export interface TripEvent {
   id: string
@@ -33,7 +41,7 @@ export interface ChecklistItem {
   checklistId: string
   text: string
   checked: boolean
-  checkedBy?: 'jovi' | 'paula'
+  checkedBy?: TripUserId
   sortOrder: number
 }
 

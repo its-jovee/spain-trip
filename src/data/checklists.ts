@@ -54,8 +54,8 @@ export const SEED_CHECKLISTS: Checklist[] = [
     ],
   ),
   buildChecklist(
-    "Jovi's bag",
-    'Personal essentials for Jovi',
+    "João's bag",
+    'Personal essentials for João',
     [
       'Passport (6+ months validity)',
       'Comfortable walking shoes',

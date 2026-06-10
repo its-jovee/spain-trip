@@ -6,7 +6,7 @@ interface Props {
   onChange: (value: ParticipantFilter) => void
 }
 
-const OPTIONS: ParticipantFilter[] = ['all', 'both', 'paula', 'jovi']
+const OPTIONS: ParticipantFilter[] = ['all', 'both', 'joao', 'paula']
 
 export function FilterBar({ value, onChange }: Props) {
   return (

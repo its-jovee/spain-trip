@@ -1,55 +1,85 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { SHARED_AUTH_EMAIL, STORAGE_KEYS } from '../lib/constants'
+import type { TripUser, TripUserId } from '../types'
+import { STORAGE_KEYS, TRIP_USERS, resolveUserFromEmail } from '../lib/constants'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import { AuthContext } from './auth-context'
 
+function loadStoredUser(): TripUser | null {
+  const id = localStorage.getItem(STORAGE_KEYS.authUser) as TripUserId | null
+  return id && TRIP_USERS[id] ? TRIP_USERS[id] : null
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<TripUser | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function checkAuth() {
       if (isSupabaseConfigured && supabase) {
         const { data } = await supabase.auth.getSession()
-        setIsAuthenticated(!!data.session)
+        if (data.session?.user.email) {
+          setUser(resolveUserFromEmail(data.session.user.email))
+        } else {
+          setUser(null)
+        }
       } else {
-        setIsAuthenticated(localStorage.getItem(STORAGE_KEYS.auth) === 'true')
+        setUser(loadStoredUser())
       }
       setLoading(false)
     }
     void checkAuth()
+
+    if (!supabase) return
+
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user.email) {
+        setUser(resolveUserFromEmail(session.user.email))
+      } else {
+        setUser(null)
+      }
+    })
+
+    return () => subscription.subscription.unsubscribe()
   }, [])
 
-  const login = useCallback(async (passcode: string) => {
+  const login = useCallback(async (userId: TripUserId, password: string) => {
+    const tripUser = TRIP_USERS[userId]
+
     if (isSupabaseConfigured && supabase) {
       const { error } = await supabase.auth.signInWithPassword({
-        email: SHARED_AUTH_EMAIL,
-        password: passcode,
+        email: tripUser.email,
+        password,
       })
       if (error) throw error
-      setIsAuthenticated(true)
+      setUser(tripUser)
       return
     }
 
     const expected = import.meta.env.VITE_APP_PASSCODE ?? 'spain2026'
-    if (passcode !== expected) {
-      throw new Error('Incorrect passcode')
+    if (password !== expected) {
+      throw new Error('Incorrect password')
     }
-    localStorage.setItem(STORAGE_KEYS.auth, 'true')
-    setIsAuthenticated(true)
+    localStorage.setItem(STORAGE_KEYS.authUser, userId)
+    setUser(tripUser)
   }, [])
 
   const logout = useCallback(async () => {
     if (supabase) {
       await supabase.auth.signOut()
     }
-    localStorage.removeItem(STORAGE_KEYS.auth)
-    setIsAuthenticated(false)
+    localStorage.removeItem(STORAGE_KEYS.authUser)
+    setUser(null)
   }, [])
 
   const value = useMemo(
-    () => ({ isAuthenticated, loading, login, logout }),
-    [isAuthenticated, loading, login, logout],
+    () => ({
+      isAuthenticated: !!user,
+      loading,
+      user,
+      login,
+      logout,
+    }),
+    [user, loading, login, logout],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

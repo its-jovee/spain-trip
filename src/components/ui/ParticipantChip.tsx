@@ -1,5 +1,7 @@
 import type { Participant } from '../../types'
-import { PARTICIPANT_LABELS, PARTICIPANT_MONOGRAM } from '../../lib/constants'
+import { PARTICIPANT_LABELS } from '../../lib/constants'
+import { participantsToUsers } from '../../lib/users'
+import { UserAvatarGroup } from './UserAvatar'
 
 interface Props {
   participant: Participant
@@ -7,9 +9,12 @@ interface Props {
 }
 
 export function ParticipantChip({ participant, showLabel = false }: Props) {
+  const users = participantsToUsers(participant)
+
   return (
-    <span className={`chip chip--${participant}`} title={PARTICIPANT_LABELS[participant]}>
-      {showLabel ? PARTICIPANT_LABELS[participant] : PARTICIPANT_MONOGRAM[participant]}
+    <span className="participant-chip" title={PARTICIPANT_LABELS[participant]}>
+      <UserAvatarGroup users={users} size={22} />
+      {showLabel && <span className="participant-chip-label">{PARTICIPANT_LABELS[participant]}</span>}
     </span>
   )
 }

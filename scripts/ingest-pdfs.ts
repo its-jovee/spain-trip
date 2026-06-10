@@ -25,7 +25,7 @@ interface ManifestEntry {
     endAt?: string
     location?: string
     confirmationCode?: string
-    participants?: 'both' | 'paula' | 'jovi'
+    participants?: 'both' | 'paula' | 'joao'
     notes?: string
     details?: Record<string, string>
   }

@@ -1,7 +1,7 @@
 import type { Checklist, TripDocument, TripEvent } from '../types'
 import { SEED_CHECKLISTS } from '../data/checklists'
 import { SEED_DOCUMENTS, SEED_EVENTS } from '../data/seed'
-import { STORAGE_KEYS } from './constants'
+import { STORAGE_KEYS, normalizeCheckedBy, normalizeParticipant } from './constants'
 import { generateId } from './utils'
 import { isSupabaseConfigured, supabase } from './supabase'
 
@@ -274,7 +274,7 @@ class TripStore {
     await this.updateEvent(id, { startAt: newStartAt })
   }
 
-  async toggleChecklistItem(checklistId: string, itemId: string, checkedBy: 'jovi' | 'paula') {
+  async toggleChecklistItem(checklistId: string, itemId: string, checkedBy: 'joao' | 'paula') {
     const checklist = this.checklists.find((c) => c.id === checklistId)
     const item = checklist?.items.find((i) => i.id === itemId)
     if (!item) return
@@ -326,7 +326,7 @@ function mapEventFromDb(row: Record<string, unknown>): TripEvent {
     endAt: (row.end_at as string) ?? undefined,
     location: (row.location as string) ?? undefined,
     confirmationCode: (row.confirmation_code as string) ?? undefined,
-    participants: row.participants as TripEvent['participants'],
+    participants: normalizeParticipant(row.participants as string),
     notes: (row.notes as string) ?? undefined,
     details: (row.details as Record<string, string>) ?? undefined,
     documentId: (row.document_id as string) ?? undefined,
@@ -383,7 +383,7 @@ function mapChecklistItemFromDb(row: Record<string, unknown>) {
     checklistId: row.checklist_id as string,
     text: row.text as string,
     checked: row.checked as boolean,
-    checkedBy: (row.checked_by as 'jovi' | 'paula') ?? undefined,
+    checkedBy: normalizeCheckedBy(row.checked_by as string | null),
     sortOrder: row.sort_order as number,
   }
 }
