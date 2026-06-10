@@ -7,19 +7,39 @@ import { isSupabaseConfigured, supabase } from './supabase'
 
 type Listener = () => void
 
+export interface TripStoreSnapshot {
+  events: TripEvent[]
+  documents: TripDocument[]
+  checklists: Checklist[]
+}
+
 class TripStore {
   private events: TripEvent[] = []
   private documents: TripDocument[] = []
   private checklists: Checklist[] = []
   private listeners = new Set<Listener>()
   private initialized = false
+  private snapshot: TripStoreSnapshot = {
+    events: this.events,
+    documents: this.documents,
+    checklists: this.checklists,
+  }
 
   subscribe(listener: Listener) {
     this.listeners.add(listener)
     return () => this.listeners.delete(listener)
   }
 
+  getSnapshot(): TripStoreSnapshot {
+    return this.snapshot
+  }
+
   private notify() {
+    this.snapshot = {
+      events: this.events,
+      documents: this.documents,
+      checklists: this.checklists,
+    }
     this.listeners.forEach((l) => l())
   }
 

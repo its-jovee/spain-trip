@@ -4,11 +4,8 @@ import { tripStore } from '../lib/store'
 export function useTripStore() {
   const snapshot = useSyncExternalStore(
     (cb) => tripStore.subscribe(cb),
-    () => ({
-      events: tripStore.getEvents(),
-      documents: tripStore.getDocuments(),
-      checklists: tripStore.getChecklists(),
-    }),
+    () => tripStore.getSnapshot(),
+    () => tripStore.getSnapshot(),
   )
 
   useEffect(() => {
