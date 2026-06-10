@@ -2,8 +2,8 @@
 
 Drop your photos here:
 
-- `joao.jpg` — João's avatar
-- `paula.jpg` — Paula's avatar
+- `joao.png` — João's avatar
+- `paula.png` — Paula's avatar
 
 Supported formats: `.jpg`, `.jpeg`, `.png`, `.webp`
 

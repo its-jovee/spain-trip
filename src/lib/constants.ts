@@ -9,13 +9,13 @@ export const TRIP_USERS: Record<TripUserId, TripUser> = {
     id: 'joao',
     name: 'João',
     email: import.meta.env.VITE_JOAO_EMAIL ?? 'joao@spain.local',
-    avatarUrl: '/avatars/joao.jpg',
+    avatarUrl: '/avatars/joao.png',
   },
   paula: {
     id: 'paula',
     name: 'Paula',
     email: import.meta.env.VITE_PAULA_EMAIL ?? 'paula@spain.local',
-    avatarUrl: '/avatars/paula.jpg',
+    avatarUrl: '/avatars/paula.png',
   },
 }
 
