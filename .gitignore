@@ -14,6 +14,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+pdfs/uploads/
+public/documents/*.pdf
 
 # Editor directories and files
 .vscode/*

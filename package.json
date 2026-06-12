@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "ingest": "tsx scripts/ingest-pdfs.ts"
+    "ingest": "tsx scripts/ingest-pdfs.ts",
+    "reset-trip": "tsx scripts/reset-trip-data.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

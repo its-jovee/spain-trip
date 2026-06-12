@@ -65,16 +65,6 @@ export function DocumentsPage() {
         </div>
       )}
 
-      <p
-        style={{
-          marginTop: '2rem',
-          fontSize: '0.85rem',
-          color: 'var(--color-ink-faint)',
-          textAlign: 'center',
-        }}
-      >
-        Real PDFs will appear here once uploaded to Supabase Storage.
-      </p>
     </div>
   )
 }

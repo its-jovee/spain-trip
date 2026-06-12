@@ -1,8 +1,8 @@
 import type { Participant, TripUser, TripUserId } from '../types'
 
 export const APP_NAME = 'Spain Trip'
-export const TRIP_START = new Date('2026-06-20T00:00:00')
-export const TRIP_END = new Date('2026-07-05T23:59:59')
+export const TRIP_START = new Date('2026-06-12T19:20:00')
+export const TRIP_END = new Date('2026-06-26T20:20:00')
 
 export const TRIP_USERS: Record<TripUserId, TripUser> = {
   joao: {
@@ -34,8 +34,8 @@ export const EVENT_TYPE_LABELS = {
 } as const
 
 export const STORAGE_KEYS = {
-  events: 'spain-trip-events',
-  documents: 'spain-trip-documents',
+  events: 'spain-trip-events-v2',
+  documents: 'spain-trip-documents-v2',
   checklists: 'spain-trip-checklists',
   authUser: 'spain-trip-auth-user',
 } as const
