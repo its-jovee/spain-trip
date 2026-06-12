@@ -36,6 +36,7 @@ create table if not exists checklists (
   id uuid primary key default uuid_generate_v4(),
   title text not null,
   description text,
+  leg text not null default 'gru-mad' check (leg in ('gru-mad', 'mad-sev', 'sev-mad', 'mad-gru')),
   sort_order int not null default 0,
   created_at timestamptz not null default now()
 );

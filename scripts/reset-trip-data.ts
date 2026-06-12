@@ -104,12 +104,16 @@ async function main() {
     await supabase.from('checklists').delete().neq('id', '00000000-0000-0000-0000-000000000000')
   }
   for (const [i, cl] of SEED_CHECKLISTS.entries()) {
-    await supabase.from('checklists').insert({
-      id: cl.id,
-      title: cl.title,
-      description: cl.description,
-      sort_order: i,
-    })
+    await supabase.from('checklists').upsert(
+      {
+        id: cl.id,
+        title: cl.title,
+        description: cl.description,
+        leg: cl.leg,
+        sort_order: i,
+      },
+      { onConflict: 'id' },
+    )
     await supabase.from('checklist_items').insert(
       cl.items.map((item) => ({
         id: item.id,

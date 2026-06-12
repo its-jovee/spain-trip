@@ -45,10 +45,13 @@ export interface ChecklistItem {
   sortOrder: number
 }
 
+export type TripLeg = 'gru-mad' | 'mad-sev' | 'sev-mad' | 'mad-gru'
+
 export interface Checklist {
   id: string
   title: string
   description?: string
+  leg: TripLeg
   items: ChecklistItem[]
 }
 

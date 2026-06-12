@@ -36,7 +36,7 @@ export const EVENT_TYPE_LABELS = {
 export const STORAGE_KEYS = {
   events: 'spain-trip-events-v2',
   documents: 'spain-trip-documents-v2',
-  checklists: 'spain-trip-checklists-v3',
+  checklists: 'spain-trip-checklists-v4',
   authUser: 'spain-trip-auth-user',
 } as const
 

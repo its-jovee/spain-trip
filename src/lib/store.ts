@@ -3,6 +3,7 @@ import { SEED_CHECKLISTS } from '../data/checklists'
 import { SEED_DOCUMENTS, SEED_EVENTS } from '../data/seed'
 import { STORAGE_KEYS, normalizeCheckedBy, normalizeParticipant } from './constants'
 import { generateId } from './utils'
+import { legFromDb } from './checklists'
 import { dedupeDocuments, resolveDocumentUrl } from './documents'
 import { isSupabaseConfigured, supabase } from './supabase'
 
@@ -109,14 +110,7 @@ class TripStore {
     }
 
     if (checklistsRes.data?.length && itemsRes.data) {
-      this.checklists = checklistsRes.data.map((cl) => ({
-        id: cl.id,
-        title: cl.title,
-        description: cl.description ?? undefined,
-        items: itemsRes.data!
-          .filter((i) => i.checklist_id === cl.id)
-          .map(mapChecklistItemFromDb),
-      }))
+      this.checklists = checklistsRes.data.map((cl) => mapChecklistFromDb(cl, itemsRes.data!))
     } else {
       this.checklists = SEED_CHECKLISTS
       await this.seedSupabaseChecklists()
@@ -155,14 +149,7 @@ class TripStore {
       supabase.from('checklist_items').select('*').order('sort_order'),
     ])
     if (checklistsRes.data && itemsRes.data) {
-      this.checklists = checklistsRes.data.map((cl) => ({
-        id: cl.id,
-        title: cl.title,
-        description: cl.description ?? undefined,
-        items: itemsRes.data!
-          .filter((i) => i.checklist_id === cl.id)
-          .map(mapChecklistItemFromDb),
-      }))
+      this.checklists = checklistsRes.data.map((cl) => mapChecklistFromDb(cl, itemsRes.data!))
       this.notify()
     }
   }
@@ -179,6 +166,7 @@ class TripStore {
         id: cl.id,
         title: cl.title,
         description: cl.description,
+        leg: cl.leg,
         sort_order: SEED_CHECKLISTS.indexOf(cl),
       })
       await supabase.from('checklist_items').insert(
@@ -385,6 +373,18 @@ function mapDocumentToDb(doc: TripDocument) {
     url: doc.url ?? null,
     event_id: doc.eventId ?? null,
     created_at: doc.createdAt,
+  }
+}
+
+function mapChecklistFromDb(row: Record<string, unknown>, items: Record<string, unknown>[]) {
+  return {
+    id: row.id as string,
+    title: row.title as string,
+    description: (row.description as string) ?? undefined,
+    leg: legFromDb(row.leg as string | undefined),
+    items: items
+      .filter((i) => i.checklist_id === row.id)
+      .map(mapChecklistItemFromDb),
   }
 }
 
