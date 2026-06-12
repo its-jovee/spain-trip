@@ -10,6 +10,8 @@ import {
   endOfWeek,
   eachDayOfInterval,
   addDays,
+  isAfter,
+  isBefore,
   isWithinInterval,
 } from 'date-fns'
 import type { Participant, ParticipantFilter, TripEvent } from '../types'
@@ -68,6 +70,52 @@ export function eventsForDay(events: TripEvent[], day: Date): TripEvent[] {
   return events
     .filter((e) => isSameDay(parseISO(e.startAt), day))
     .sort((a, b) => a.startAt.localeCompare(b.startAt) || a.sortOrder - b.sortOrder)
+}
+
+export function getDepartureEvent(events: TripEvent[]): TripEvent | null {
+  return (
+    events
+      .filter((e) => e.type === 'flight')
+      .sort((a, b) => a.startAt.localeCompare(b.startAt))[0] ?? null
+  )
+}
+
+export function getReturnEvent(events: TripEvent[]): TripEvent | null {
+  return (
+    events
+      .filter((e) => e.type === 'flight')
+      .sort((a, b) => b.startAt.localeCompare(a.startAt))[0] ?? null
+  )
+}
+
+export type TripPhase = 'before' | 'departure-day' | 'during' | 'after'
+
+export function getTripPhase(events: TripEvent[]): TripPhase {
+  const now = new Date()
+  const outbound = getDepartureEvent(events)
+  const returnFlight = getReturnEvent(events)
+
+  if (!outbound) return 'during'
+
+  const depart = parseISO(outbound.startAt)
+  const tripEnd = returnFlight?.endAt ? parseISO(returnFlight.endAt) : addDays(depart, 14)
+
+  if (isAfter(now, tripEnd)) return 'after'
+  if (isBefore(now, depart)) {
+    return isSameDay(now, depart) ? 'departure-day' : 'before'
+  }
+  return 'during'
+}
+
+export function formatDepartureCountdown(departureIso: string): string {
+  const now = new Date()
+  const depart = parseISO(departureIso)
+  if (isSameDay(now, depart)) {
+    return formatDistanceToNow(depart, { addSuffix: true })
+  }
+  const days = Math.ceil((depart.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  if (days <= 1) return formatDistanceToNow(depart, { addSuffix: true })
+  return `in ${days} days`
 }
 
 export function getUpcomingEvents(events: TripEvent[], limit = 3): TripEvent[] {

@@ -5,7 +5,6 @@ import { AppShell } from './components/layout/AppShell'
 import { LoginPage } from './pages/LoginPage'
 import { TodayPage } from './pages/TodayPage'
 import { ItineraryPage } from './pages/ItineraryPage'
-import { CalendarPage } from './pages/CalendarPage'
 import { DocumentsPage } from './pages/DocumentsPage'
 import { ChecklistsPage } from './pages/ChecklistsPage'
 import { SettingsPage } from './pages/SettingsPage'
@@ -30,7 +29,7 @@ function ProtectedRoutes() {
       <Route element={<AppShell />}>
         <Route index element={<TodayPage />} />
         <Route path="itinerary" element={<ItineraryPage />} />
-        <Route path="calendar" element={<CalendarPage />} />
+        <Route path="calendar" element={<Navigate to="/itinerary" replace />} />
         <Route path="documents" element={<DocumentsPage />} />
         <Route path="checklists" element={<ChecklistsPage />} />
         <Route path="settings" element={<SettingsPage />} />

@@ -96,28 +96,30 @@ async function main() {
     process.exit(1)
   }
 
-  const tripTodos = SEED_CHECKLISTS.find((c) => c.title === 'Trip to-dos')
-  if (tripTodos) {
-    const { data: existing } = await supabase.from('checklists').select('id').eq('title', 'Trip to-dos').maybeSingle()
-    if (!existing) {
-      await supabase.from('checklists').insert({
-        id: tripTodos.id,
-        title: tripTodos.title,
-        description: tripTodos.description,
-        sort_order: 99,
-      })
-      await supabase.from('checklist_items').insert(
-        tripTodos.items.map((item) => ({
-          id: item.id,
-          checklist_id: tripTodos.id,
-          text: item.text,
-          checked: item.checked,
-          sort_order: item.sortOrder,
-        })),
-      )
-      console.log('Added Trip to-dos checklist')
-    }
+  console.log('Refreshing checklists…')
+  const { data: existingLists } = await supabase.from('checklists').select('id')
+  if (existingLists?.length) {
+    await supabase.from('checklist_items').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+    await supabase.from('checklists').delete().neq('id', '00000000-0000-0000-0000-000000000000')
   }
+  for (const [i, cl] of SEED_CHECKLISTS.entries()) {
+    await supabase.from('checklists').insert({
+      id: cl.id,
+      title: cl.title,
+      description: cl.description,
+      sort_order: i,
+    })
+    await supabase.from('checklist_items').insert(
+      cl.items.map((item) => ({
+        id: item.id,
+        checklist_id: cl.id,
+        text: item.text,
+        checked: item.checked,
+        sort_order: item.sortOrder,
+      })),
+    )
+  }
+  console.log(`Inserted ${SEED_CHECKLISTS.length} checklists`)
 
   console.log('Done — refresh the app.')
 }
