@@ -88,6 +88,19 @@ export const SEED_CHECKLISTS: Checklist[] = [
     ],
   ),
   buildChecklist(
+    'Trip to-dos',
+    'Reservations and bookings still to confirm',
+    [
+      'Alcázar timed tickets — Sat Jun 20, 9:30 slot',
+      'La Llorería dinner — Thu Jun 25 (book ahead)',
+      'Sevilla dinners: Fatouch, La Santa (Fri), Tradevo (Sat), El Sella (Sun), Atávico (Mon)',
+      'Toledo fast-train tickets — Wed Jun 24',
+      'Cathedral/Giralda entry — Sun Jun 21',
+      'Email Cristine Bedfor: Alameda wine tips + confirm 1 PM bag drop',
+      'Soho Boutique Congreso — get booking confirmation',
+    ],
+  ),
+  buildChecklist(
     'Before leaving home',
     'Last things before locking the door',
     [

@@ -6,6 +6,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
+import { SEED_CHECKLISTS } from '../src/data/checklists'
 import { SEED_DOCUMENTS, SEED_EVENTS } from '../src/data/seed'
 
 function loadEnv() {
@@ -93,6 +94,29 @@ async function main() {
   if (docsError) {
     console.error('Documents error:', docsError.message)
     process.exit(1)
+  }
+
+  const tripTodos = SEED_CHECKLISTS.find((c) => c.title === 'Trip to-dos')
+  if (tripTodos) {
+    const { data: existing } = await supabase.from('checklists').select('id').eq('title', 'Trip to-dos').maybeSingle()
+    if (!existing) {
+      await supabase.from('checklists').insert({
+        id: tripTodos.id,
+        title: tripTodos.title,
+        description: tripTodos.description,
+        sort_order: 99,
+      })
+      await supabase.from('checklist_items').insert(
+        tripTodos.items.map((item) => ({
+          id: item.id,
+          checklist_id: tripTodos.id,
+          text: item.text,
+          checked: item.checked,
+          sort_order: item.sortOrder,
+        })),
+      )
+      console.log('Added Trip to-dos checklist')
+    }
   }
 
   console.log('Done — refresh the app.')

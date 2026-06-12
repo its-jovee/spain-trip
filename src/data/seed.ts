@@ -1,9 +1,10 @@
 import type { TripDocument, TripEvent } from '../types'
 import { generateId } from '../lib/utils'
+import { TENTATIVE_EVENTS } from './tentative'
 
 const now = new Date().toISOString()
 
-export const SEED_EVENTS: TripEvent[] = [
+const CONFIRMED_EVENTS: TripEvent[] = [
   {
     id: generateId(),
     type: 'flight',
@@ -32,9 +33,11 @@ export const SEED_EVENTS: TripEvent[] = [
     endAt: '2026-06-19T11:00:00',
     location: 'Calle Zorrilla 7, 28014 Madrid',
     participants: 'both',
-    notes: 'First stay in Madrid — 6 nights. Check-out before train to Sevilla on the 19th.',
+    notes: 'Company hotel — no booking confirmation yet. 6 nights. Check-out before train to Sevilla on the 19th.',
     details: {
       Hotel: 'Soho Boutique Congreso ★★★★',
+      Address: 'Calle Zorrilla 7, 28014 Madrid',
+      Status: 'Tentative — awaiting confirmation',
       'Check-in': 'From 3:00 PM (Jun 13)',
       'Check-out': 'Jun 19 — before iryo train',
     },
@@ -147,6 +150,8 @@ export const SEED_EVENTS: TripEvent[] = [
     updatedAt: now,
   },
 ]
+
+export const SEED_EVENTS: TripEvent[] = [...CONFIRMED_EVENTS, ...TENTATIVE_EVENTS]
 
 export const SEED_DOCUMENTS: TripDocument[] = [
   {
