@@ -27,3 +27,4 @@ public/documents/*.pdf
 *.njsproj
 *.sln
 *.sw?
+*.pdf
