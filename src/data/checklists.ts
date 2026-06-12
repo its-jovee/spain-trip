@@ -116,7 +116,7 @@ export const SEED_CHECKLISTS: Checklist[] = [
     'Snacks for the flight',
   ], 'b1000001-0001-4000-8000-000000000006'),
   buildChecklist('gru-mad', 'Madrid arrival', 'Sat Jun 13 · Soho Boutique Congreso', [
-    'Soho Boutique Congreso — confirmation (pending)',
+    'Soho Boutique Congreso — confirmation in Docs',
     'Taxi/Cercanías from Barajas to hotel',
     'Drop bags · easy first evening',
     'Exchange or withdraw euros if needed',
