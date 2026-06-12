@@ -68,6 +68,10 @@ create policy "Authenticated users can read documents"
   on documents for select to authenticated using (true);
 create policy "Authenticated users can insert documents"
   on documents for insert to authenticated with check (true);
+create policy "Authenticated users can update documents"
+  on documents for update to authenticated using (true);
+create policy "Authenticated users can delete documents"
+  on documents for delete to authenticated using (true);
 
 create policy "Authenticated users can read checklists"
   on checklists for select to authenticated using (true);

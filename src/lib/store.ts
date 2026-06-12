@@ -3,7 +3,7 @@ import { SEED_CHECKLISTS } from '../data/checklists'
 import { SEED_DOCUMENTS, SEED_EVENTS } from '../data/seed'
 import { STORAGE_KEYS, normalizeCheckedBy, normalizeParticipant } from './constants'
 import { generateId } from './utils'
-import { resolveDocumentUrl } from './documents'
+import { dedupeDocuments, resolveDocumentUrl } from './documents'
 import { isSupabaseConfigured, supabase } from './supabase'
 
 type Listener = () => void
@@ -73,7 +73,7 @@ class TripStore {
     const checklists = localStorage.getItem(STORAGE_KEYS.checklists)
 
     this.events = events ? JSON.parse(events) : SEED_EVENTS
-    this.documents = documents ? JSON.parse(documents) : SEED_DOCUMENTS
+    this.documents = dedupeDocuments(documents ? JSON.parse(documents) : SEED_DOCUMENTS)
     this.checklists = checklists ? JSON.parse(checklists) : SEED_CHECKLISTS
 
     if (!events) this.persistLocal()
@@ -103,7 +103,7 @@ class TripStore {
     }
 
     if (docsRes.data?.length) {
-      this.documents = docsRes.data.map(mapDocumentFromDb)
+      this.documents = dedupeDocuments(docsRes.data.map(mapDocumentFromDb))
     } else {
       this.documents = SEED_DOCUMENTS
     }

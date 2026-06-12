@@ -153,51 +153,61 @@ const CONFIRMED_EVENTS: TripEvent[] = [
 
 export const SEED_EVENTS: TripEvent[] = [...CONFIRMED_EVENTS, ...TENTATIVE_EVENTS]
 
+const DOC_IDS = {
+  voosJoao: 'a1000001-0001-4000-8000-000000000001',
+  voosPaula: 'a1000001-0001-4000-8000-000000000002',
+  hotelAlba: 'a1000001-0001-4000-8000-000000000003',
+  hotelSevilla: 'a1000001-0001-4000-8000-000000000004',
+  tremSevilha: 'a1000001-0001-4000-8000-000000000005',
+  seguroJoao: 'a1000001-0001-4000-8000-000000000006',
+  seguroPaula: 'a1000001-0001-4000-8000-000000000007',
+} as const
+
 export const SEED_DOCUMENTS: TripDocument[] = [
   {
-    id: generateId(),
+    id: DOC_IDS.voosJoao,
     name: 'Voos — João',
     url: '/documents/voos-joao.pdf',
     storagePath: 'uploads/voos-joao.pdf',
     createdAt: now,
   },
   {
-    id: generateId(),
+    id: DOC_IDS.voosPaula,
     name: 'Voos — Paula',
     url: '/documents/voos-paula.pdf',
     storagePath: 'uploads/voos-paula.pdf',
     createdAt: now,
   },
   {
-    id: generateId(),
+    id: DOC_IDS.hotelAlba,
     name: 'Hotel Madrid — Room Mate Alba',
     url: '/documents/hotel-madrid-alba.pdf',
     storagePath: 'uploads/hotel-madrid-alba.pdf',
     createdAt: now,
   },
   {
-    id: generateId(),
+    id: DOC_IDS.hotelSevilla,
     name: 'Hotel Sevilla — Cristine Bedfor',
     url: '/documents/hotel-sevilla.pdf',
     storagePath: 'uploads/hotel-sevilla.pdf',
     createdAt: now,
   },
   {
-    id: generateId(),
+    id: DOC_IDS.tremSevilha,
     name: 'Trens — Madrid ↔ Sevilla (iryo)',
     url: '/documents/trem-sevilha.pdf',
     storagePath: 'uploads/trem-sevilha.pdf',
     createdAt: now,
   },
   {
-    id: generateId(),
+    id: DOC_IDS.seguroJoao,
     name: 'Seguro viagem — João',
     url: '/documents/seguro-joao.pdf',
     storagePath: 'uploads/seguro-joao.pdf',
     createdAt: now,
   },
   {
-    id: generateId(),
+    id: DOC_IDS.seguroPaula,
     name: 'Seguro viagem — Paula',
     url: '/documents/seguro-paula.pdf',
     storagePath: 'uploads/seguro-paula.pdf',

@@ -11,6 +11,20 @@ function publicDocumentPath(doc: TripDocument): string | undefined {
   return undefined
 }
 
+export function dedupeDocuments(documents: TripDocument[]): TripDocument[] {
+  const byKey = new Map<string, TripDocument>()
+
+  for (const doc of documents) {
+    const key = doc.storagePath ?? doc.name.toLowerCase()
+    const existing = byKey.get(key)
+    if (!existing || doc.createdAt > existing.createdAt) {
+      byKey.set(key, doc)
+    }
+  }
+
+  return [...byKey.values()].sort((a, b) => a.name.localeCompare(b.name))
+}
+
 export async function resolveDocumentUrl(doc: TripDocument): Promise<string | undefined> {
   if (supabase && doc.storagePath) {
     const { data, error } = await supabase.storage

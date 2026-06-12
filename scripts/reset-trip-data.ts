@@ -80,8 +80,8 @@ async function main() {
     process.exit(1)
   }
 
-  console.log(`Inserting ${SEED_DOCUMENTS.length} documents…`)
-  const { error: docsError } = await supabase.from('documents').insert(
+  console.log(`Upserting ${SEED_DOCUMENTS.length} documents…`)
+  const { error: docsError } = await supabase.from('documents').upsert(
     SEED_DOCUMENTS.map((d) => ({
       id: d.id,
       name: d.name,
@@ -90,6 +90,7 @@ async function main() {
       event_id: d.eventId ?? null,
       created_at: d.createdAt,
     })),
+    { onConflict: 'id' },
   )
   if (docsError) {
     console.error('Documents error:', docsError.message)
