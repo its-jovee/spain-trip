@@ -23,7 +23,10 @@ function loadEnv() {
 
 async function main() {
   const env = loadEnv()
-  const url = env.SUPABASE_URL ?? env.VITE_SUPABASE_URL
+  const url =
+    env.VITE_SUPABASE_URL && !env.VITE_SUPABASE_URL.includes('your-project')
+      ? env.VITE_SUPABASE_URL
+      : env.SUPABASE_URL
   const key = env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!url || !key || key.includes('your-service')) {

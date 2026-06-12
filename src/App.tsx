@@ -3,7 +3,6 @@ import { AuthProvider } from './context/AuthProvider'
 import { useAuth } from './hooks/useAuth'
 import { AppShell } from './components/layout/AppShell'
 import { LoginPage } from './pages/LoginPage'
-import { TodayPage } from './pages/TodayPage'
 import { ItineraryPage } from './pages/ItineraryPage'
 import { DocumentsPage } from './pages/DocumentsPage'
 import { ChecklistsPage } from './pages/ChecklistsPage'
@@ -27,9 +26,10 @@ function ProtectedRoutes() {
   return (
     <Routes>
       <Route element={<AppShell />}>
-        <Route index element={<TodayPage />} />
-        <Route path="itinerary" element={<ItineraryPage />} />
-        <Route path="calendar" element={<Navigate to="/itinerary" replace />} />
+        <Route index element={<ItineraryPage />} />
+        <Route path="itinerary" element={<Navigate to="/" replace />} />
+        <Route path="today" element={<Navigate to="/" replace />} />
+        <Route path="calendar" element={<Navigate to="/" replace />} />
         <Route path="documents" element={<DocumentsPage />} />
         <Route path="checklists" element={<ChecklistsPage />} />
         <Route path="settings" element={<SettingsPage />} />

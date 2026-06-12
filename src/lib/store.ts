@@ -3,6 +3,7 @@ import { SEED_CHECKLISTS } from '../data/checklists'
 import { SEED_DOCUMENTS, SEED_EVENTS } from '../data/seed'
 import { STORAGE_KEYS, normalizeCheckedBy, normalizeParticipant } from './constants'
 import { generateId } from './utils'
+import { resolveDocumentUrl } from './documents'
 import { isSupabaseConfigured, supabase } from './supabase'
 
 type Listener = () => void
@@ -52,8 +53,18 @@ class TripStore {
       this.loadFromLocal()
     }
 
+    await this.resolveDocumentUrls()
     this.initialized = true
     this.notify()
+  }
+
+  private async resolveDocumentUrls() {
+    this.documents = await Promise.all(
+      this.documents.map(async (doc) => {
+        const url = await resolveDocumentUrl(doc)
+        return url ? { ...doc, url } : doc
+      }),
+    )
   }
 
   private loadFromLocal() {

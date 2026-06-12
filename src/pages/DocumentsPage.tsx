@@ -1,8 +1,20 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTripStore } from '../hooks/useTripStore'
 
 export function DocumentsPage() {
   const { documents } = useTripStore()
+  const [opening, setOpening] = useState<string | null>(null)
+
+  async function openDocument(docId: string, url?: string) {
+    if (!url || url === '#') {
+      alert('PDF not available yet. Run: npm run upload-pdfs')
+      return
+    }
+    setOpening(docId)
+    window.open(url, '_blank', 'noopener,noreferrer')
+    setOpening(null)
+  }
 
   return (
     <div className="page">
@@ -13,28 +25,27 @@ export function DocumentsPage() {
       </header>
 
       {documents.length === 0 ? (
-        <p style={{ color: 'var(--color-ink-muted)' }}>
-          No documents yet. Drop your PDFs here when ready — we'll extract the details automatically.
-        </p>
+        <p style={{ color: 'var(--color-ink-muted)' }}>No documents yet.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
           {documents.map((doc, i) => (
-            <motion.a
+            <motion.button
               key={doc.id}
-              href={doc.url ?? '#'}
-              target="_blank"
-              rel="noopener noreferrer"
+              type="button"
               className="card"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
+              onClick={() => void openDocument(doc.id, doc.url)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
                 padding: '1rem 1.1rem',
-                textDecoration: 'none',
-                color: 'inherit',
+                textAlign: 'left',
+                width: '100%',
+                cursor: doc.url ? 'pointer' : 'not-allowed',
+                opacity: doc.url ? 1 : 0.6,
               }}
             >
               <span
@@ -56,15 +67,14 @@ export function DocumentsPage() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontWeight: 450 }}>{doc.name}</p>
                 <p className="small-caps" style={{ marginTop: '0.15rem' }}>
-                  Tap to open
+                  {opening === doc.id ? 'Opening…' : doc.url ? 'Tap to open' : 'Upload pending'}
                 </p>
               </div>
               <span style={{ color: 'var(--color-ink-faint)' }}>→</span>
-            </motion.a>
+            </motion.button>
           ))}
         </div>
       )}
-
     </div>
   )
 }
